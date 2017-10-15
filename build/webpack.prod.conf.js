@@ -87,7 +87,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'manifest',
       chunks: ['vendor']
     }),
-    // copy custom static assets
+    // copy custom static common
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static'),
