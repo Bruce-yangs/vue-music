@@ -15,8 +15,8 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import '../../common/sass/variable.scss';
-  @import '../../common/sass/mixin.scss';
+  @import '~common/sass/variable.scss';
+  @import '~common/sass/mixin.scss';
   .m-header{
     position: relative;
     height: 44px;

@@ -1,16 +1,16 @@
 <template>
   <div class="tab">
       <router-link tag="div" class="tab-item" to="/recommend">
-        <div class="tab-link">推荐</div>
+        <span class="tab-link">推荐</span>
       </router-link>
       <router-link tag="div" class="tab-item" to="/singer">
-        <div class="tab-link">歌手</div>
+        <span class="tab-link">歌手</span>
       </router-link>
       <router-link tag="div" class="tab-item" to="/rank">
-        <div class="tab-link">排行</div>
+        <span class="tab-link">排行</span>
       </router-link>
       <router-link tag="div" class="tab-item" to="/search">
-        <div class="tab-link">搜索</div>
+        <span class="tab-link">搜索</span>
       </router-link>
   </div>
 </template>
@@ -22,7 +22,7 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import '../../common/sass/variable.scss';
+  @import '~common/sass/variable.scss';
   .tab{
     display: flex;
     height:44px;
