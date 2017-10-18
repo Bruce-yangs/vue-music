@@ -11,7 +11,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect:'/recommend'
+      redirect:'/recommend'//初始化页面 重定向
     },{
       path: '/recommend',
       component: Recommend
