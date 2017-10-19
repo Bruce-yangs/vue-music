@@ -75,6 +75,7 @@
           this.$refs.sliderGroup.style.width = width + 'px'
         },
         _initSlider() {
+            //初始化BS
           this.slider = new BScroll(this.$refs.slider,{
             scrollX:true,
             scrollY:false,
@@ -99,6 +100,7 @@
           })
       },
       _initDots() {
+            //对应轮播图下标的圆点
         this.dots = new Array(this.children.length);
       },
       _play() {//自动播放
@@ -107,6 +109,7 @@
           pageIndex += 1
         }
         this.timer = setTimeout(() => {
+            //作用：当我们做 slide 组件的时候，slide 通常会分成多个页面。调用此方法可以滚动到指定的页面
           this.slider.goToPage(pageIndex, 0, 400)//goToPage 也是BS提供的 (pageIndex, 0, 400) 0代表Y轴 400表示间隔和this.interval保持一致
         }, this.interval)
       }
