@@ -1,12 +1,12 @@
 <template>
   <div class="recommend">
-    <scroll class="recommend-content" :data="discList">
+    <scroll class="recommend-content" :data="discList" ref="scroll">
       <div>
           <div class="slider-wrapper" v-if="recommends.length">
             <slider>
               <div  v-for="item in recommends">
                 <a :href="item.linkUrl">
-                  <img :src="item.picUrl">
+                  <img class="needsclick" :src="item.picUrl" @load="loadImage">
                 </a>
               </div>
             </slider>
@@ -16,7 +16,7 @@
             <ul>
               <li v-for="item in discList" class="item">
                 <div class="icon">
-                  <img :src="item.imgurl" width="60" height="60">
+                  <img v-lazy="item.imgurl" width="60" height="60">
                 </div>
                 <div class="text">
                   <h2 class="item" v-html="item.creator.name"></h2>
@@ -26,6 +26,9 @@
             </ul>
         </div>
       </div>
+      <div class="loading-container" v-show="!discList.length">
+        <loading></loading>
+      </div>
     </scroll>
   </div>
 </template>
@@ -33,6 +36,7 @@
 <script>
   import Slider from 'base/slider/slider'
   import Scroll from 'base/scroll/scroll'
+  import Loading from 'base/loading/loading'
   import {getRecommend,getDiscList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   export default {
@@ -50,7 +54,6 @@
       _geRecommend() {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
-//            console.log(res.data.slider);
             this.recommends = res.data.slider;
           }
         })
@@ -58,14 +61,19 @@
       _getDiscList(){//歌单列表
         getDiscList().then((res) => {
           if (res.code === ERR_OK) {
-            console.log(res.data);
             this.discList = res.data.list;
           }
         })
+      },
+      loadImage() {
+          if(!this.checkLoaded) {
+            this.$refs.scroll.refresh();
+            this.checkLoaded = true;
+          }
       }
     },
     components: {
-      Slider,Scroll
+      Slider,Scroll,Loading
     }
   }
 </script>

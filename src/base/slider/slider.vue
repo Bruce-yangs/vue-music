@@ -1,4 +1,4 @@
-0<template>
+<template>
   <div class="slider" ref="slider">
     <div class="slider-group" ref="sliderGroup">
       <slot></slot>

@@ -1,4 +1,4 @@
-0<template>
+<template>
   <div ref="wrapper">
     <slot></slot>
   </div>
@@ -29,19 +29,25 @@
                 return;
             }
             //否则初始化BS
-            this.slider = new BScroll(this.$refs.wrapper,{
+            this.scroll = new BScroll(this.$refs.wrapper,{
               probeType:this.probeType,
               click:this.click
             })
       },
       enable() {
-            this.scroll && this.scroll.enable()
+        this.scroll && this.scroll.enable()
       },
       disable() {
         this.scroll && this.scroll.disable()
       },
       refresh() {//重新计算
         this.scroll && this.scroll.refresh()
+      },
+      scrollTo() {//
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
+      },
+      scrollToElement() {//
+        this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       }
     },
     watch:{
@@ -60,6 +66,6 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import "~common/sass/variable.scss";
+  /*@import "~common/sass/variable.scss";*/
 
 </style>

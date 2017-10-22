@@ -1,6 +1,6 @@
 import jsonp from 'common/js/jsonp'
-import axios from 'axios'
 import {commonParams,options} from './config'
+import axios from 'axios'
 
 export function getRecommend() {//获取banner
   const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
