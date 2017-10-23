@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
-    <listview :data="singer"></listview>
+    <listview @select="selectSinger" :data="singer"></listview>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -9,8 +10,11 @@
   import {ERR_OK} from 'api/config'
   import Singer from 'common/js/singer'
   import Listview from 'base/listview/listview'
+  import {mapMutations} from 'vuex'
+
   const HOT_NAME = '热门'
   const HOT_SINGER_LEN = 10
+
   export default {
     data() {
       return {
@@ -21,12 +25,19 @@
         this._getSingerList()
     },
     methods: {
+        selectSinger(singer){//接受派发事件的传递
+//          console.log(singer.id)
+
+          this.$router.push({
+            path:`/singer/${singer.id}`
+          })
+//          this.setSinger(singer)
+        },
         _getSingerList() {
           getSingerList().then((res) => {
             if (res.code === ERR_OK) {
-
               this.singer = this._normalizeSinger(res.data.list);//此处调用处理好的数据
-              console.log(this._normalizeSinger(this.singer))
+//              console.log(this._normalizeSinger(this.singer))
             }
           })
         },
@@ -76,7 +87,12 @@
         })
         return hot.concat(ret)
         console.log(map)
-      }
+      },
+
+        //映射 mutation-types 的常量SET_SINGER
+      /*  ...mapMutations({
+          setSinger:'SET_SINGER'
+        })*/
     },
     components: {
       Listview
