@@ -31,7 +31,7 @@
           this.$router.push({
             path:`/singer/${singer.id}`
           })
-//          this.setSinger(singer)
+          this.setSinger(singer)
         },
         _getSingerList() {
           getSingerList().then((res) => {
@@ -90,9 +90,9 @@
       },
 
         //映射 mutation-types 的常量SET_SINGER
-      /*  ...mapMutations({
+        ...mapMutations({
           setSinger:'SET_SINGER'
-        })*/
+        })
     },
     components: {
       Listview
