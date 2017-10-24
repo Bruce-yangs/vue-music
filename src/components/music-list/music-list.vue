@@ -16,6 +16,20 @@
    import {ERR_OK} from 'api/config'
    import {createSong} from 'common/js/song'
     export default {
+       props:{
+           bgImage: {
+             type: String,
+             default: ''
+           },
+            songs: {
+              type: Array,
+              default:[]
+            },
+            title: {
+               type: String,
+               default: ''
+            }
+       },
        data(){
            return{
 
@@ -86,7 +100,7 @@
       left:10%;
       z-index: 40;
       width:80%;
-      no-wrap();
+      /*no-wrap()*/
       text-align:center;
       line-height:40px;
       font-size:$font-size-large;
@@ -98,7 +112,6 @@
       height:0;
       padding-top:70%;
       transform-origin:top;
-      -webkit-background-size:;
       background-size:cover;
       .play-wrapper{
         position: absolute;
@@ -131,10 +144,10 @@
       .filter{
         position: absolute;
         top:0;
-        left: 0
-        width: 100%
-        height: 100%
-        background: rgba(7, 17, 27, 0.4)
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(7, 17, 27, 0.4);
       }
     }
     .bg-layer{
