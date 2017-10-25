@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-      <music-list :title="title" :bg-image="bgImage" :songs="songs"></music-list>
+    <music-list :title="title" :bg-image="bgImage" :songs="songs"></music-list>
   </transition>
 
 </template>
@@ -10,7 +10,7 @@
    import {getSingerDetail} from 'api/singer'
    import {ERR_OK} from 'api/config'
    import {createSong} from 'common/js/song'
-   import musicList from 'components/music-list/music-list'
+   import MusicList from 'components/music-list/music-list'
     export default {
        data(){
            return{
@@ -18,15 +18,15 @@
            }
        },
       computed: {
-           title(){
+           title() {
                return this.singer.name
            },
-          bgImage(){
-            return this.singer.avatar
-          },
-        ...mapGetters([//接受Vuex传递的值
-            'singer'
-        ])
+           bgImage() {
+               return this.singer.avatar
+           },
+          ...mapGetters([//接受Vuex传递的值
+              'singer'
+          ])
       },
       created() {
 //          console.log(this.singer)
@@ -57,8 +57,8 @@
           return ret
         }
       },
-      components:{
-        musicList
+      components: {
+        MusicList
       }
     }
 
@@ -66,7 +66,6 @@
 
 <style lang="scss" rel="stylesheet/scss">
   @import "~common/sass/variable.scss";
-
   .slide-enter-active,.slide-leave-active{
     transition: all 0.3s;
   }
