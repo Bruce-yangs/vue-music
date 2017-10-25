@@ -5,9 +5,10 @@
    </div>
    <h1 class="title" v-html="title"></h1>
    <div class="bg-image" :style="bgStyle" ref="bgImage">
-     <div class="filter"></div>
+     <div class="filter" ref="filter"></div>
    </div>
-   <scroll :data="songs" class="list" ref="list">
+   <div class="bg-layer" ref="layer"></div>
+   <scroll @scroll="scroll" :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" class="list" ref="list">
      <div class="song-list-wrapper">
        <SongList :songs="songs"></SongList>
      </div>
@@ -20,7 +21,14 @@
    import {ERR_OK} from 'api/config'
    import SongList from 'base/song-list/song-list'
    import Scroll from 'base/scroll/scroll'
+
+   const RESERVED_HEIGHT = 40
     export default {
+       data() {
+           return {
+               scrollY:0//定义一个监听纵向Y轴的值
+           }
+       },
        props: {
            bgImage: {
              type:String,
@@ -39,20 +47,29 @@
         bgStyle() {
             return `background-image:url(${this.bgImage})`
         }
-
       },
       components: {
         SongList,Scroll
       },
       created() {
-//          console.log(this.singer)
-//        this._getDetail()
+        this.probeType = 3;
+        this.listenScroll = true;
       },
       mounted(){
+           //记录图片的高度
+           this.imageHeight = this.$refs.bgImage.clientHeight
+
+           //最小滚动的值
+           this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT
+
            //$el是操作dom 设置scroll组件的初始位置   已经背景图得高度
-           this.$refs.list.$el.style.top =`${this.$refs.bgImage.clientHeight}px`
+           this.$refs.list.$el.style.top =`${this.imageHeight}px`
       },
       methods:{
+        scroll(pos) {//监听纵向滚动
+          this.scrollY = pos.y;
+//          console.log(this.scrollY)
+        }
      /*   _getDetail(){
             if(!this.singer.id) { //处理当用户在当前页面 刷新时  跳转歌手界面
               this.$router.push('/singer')
@@ -76,6 +93,44 @@
           })
           return ret
         }*/
+      },
+      watch: {
+          scrollY(newY) {
+//              console.log(newY)
+              let tranlateY = Math.max(this.minTranslateY, newY) //此处是最多滚动的值
+              let zIndex = 0
+              let scale =1
+              let blur =0
+
+              this.$refs.layer.style['transform'] = `translate3d(0,${tranlateY}px,0)`
+              this.$refs.layer.style['webkitTransform'] = `translate3d(0,${tranlateY}px,0)`
+
+              //计算背景图 缩放比例
+              const percent  = Math.abs(newY/this.imageHeight)
+              if(newY>0){
+                scale = 1 + percent
+                zIndex = 10
+              }else{
+                  //高斯模糊 只有在iphone下可以看到效果
+                blur = Math.min(20*percent,20)
+              }
+              this.$refs.filter.style['backdrop-filter'] = `blur(${blur}px)`
+              this.$refs.filter.style['webkitBackdrop-filter'] = `blur(${blur}px)`
+
+              //动态设定滑动顶部的效果
+              if(newY < this.minTranslateY) {
+                zIndex = 10
+                this.$refs.bgImage.style.paddingTop = 0
+                this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}PX`
+              }else{
+                this.$refs.bgImage.style.paddingTop = '70%'
+                this.$refs.bgImage.style.height = 0
+              }
+
+              this.$refs.bgImage.style.zIndex = zIndex
+              this.$refs.bgImage.style['transform'] = `scale(${scale})`
+              this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`
+          }
       }
     }
 
@@ -121,7 +176,7 @@
       position: relative;
       width: 100%;
       height:0;
-      z-index: 1;
+      /*z-index: 1;*/
       padding-top:70%;
       transform-origin:top;
       background-size:cover;
