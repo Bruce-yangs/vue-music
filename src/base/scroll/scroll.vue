@@ -62,6 +62,7 @@
       }
     },
     watch:{
+        //当有数据的时候，重新计算
         data() {
           setTimeout(() => {
             this.refresh()

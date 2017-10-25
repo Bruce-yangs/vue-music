@@ -58,6 +58,7 @@
     computed: {
       shortcutList() {
           return this.data.map((group) => {
+              //截取热门 ->热
               return group.title.substr(0, 1)
           })
       },

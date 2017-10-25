@@ -26,7 +26,7 @@
     },
     methods: {
         selectSinger(singer){//接受派发事件的传递
-//          console.log(singer.id)
+        console.log(singer.id)
 
           this.$router.push({
             path:`/singer/${singer.id}`
