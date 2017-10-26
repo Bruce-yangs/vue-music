@@ -1,28 +1,43 @@
 <template>
  <div class="music-list">
-   <div class="back">
+   <div class="back" @click="back">
      <i class="icon-back"></i>
    </div>
    <h1 class="title" v-html="title"></h1>
    <div class="bg-image" :style="bgStyle" ref="bgImage">
+     <div class="play-wrapper">
+       <div class="play" v-show="songs.length>0" ref="playBtn">
+         <i class="icon-play"></i>
+         <span class="text">随机播放全部</span>
+       </div>
+     </div>
      <div class="filter" ref="filter"></div>
    </div>
    <div class="bg-layer" ref="layer"></div>
    <scroll @scroll="scroll" :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" class="list" ref="list">
      <div class="song-list-wrapper">
-       <SongList :songs="songs"></SongList>
+       <song-list :songs="songs"></song-list>
+     </div>
+     <div class="loading-container" v-show="!songs.length">
+       <loading></loading>
      </div>
    </scroll>
  </div>
 </template>
 
 <script type="text/ecmascript-6">
-   import {getSingerDetail} from 'api/singer'
-   import {ERR_OK} from 'api/config'
+   /*import {getSingerDetail} from 'api/singer'
+   import {ERR_OK} from 'api/config'*/
    import SongList from 'base/song-list/song-list'
    import Scroll from 'base/scroll/scroll'
+   import Loading from 'base/loading/loading'
+   import {prefixStyle} from 'common/js/dom'
 
    const RESERVED_HEIGHT = 40
+   const transform = prefixStyle('transform')
+   const backdrop = prefixStyle('backdrop-filter')
+
+
     export default {
        data() {
            return {
@@ -49,7 +64,7 @@
         }
       },
       components: {
-        SongList,Scroll
+        SongList,Scroll,Loading
       },
       created() {
         this.probeType = 3;
@@ -69,6 +84,9 @@
         scroll(pos) {//监听纵向滚动
           this.scrollY = pos.y;
 //          console.log(this.scrollY)
+        },
+        back(){
+            this.$router.back()
         }
      /*   _getDetail(){
             if(!this.singer.id) { //处理当用户在当前页面 刷新时  跳转歌手界面
@@ -102,8 +120,8 @@
               let scale =1
               let blur =0
 
-              this.$refs.layer.style['transform'] = `translate3d(0,${tranlateY}px,0)`
-              this.$refs.layer.style['webkitTransform'] = `translate3d(0,${tranlateY}px,0)`
+              this.$refs.layer.style[transform] = `translate3d(0,${tranlateY}px,0)`
+
 
               //计算背景图 缩放比例
               const percent  = Math.abs(newY/this.imageHeight)
@@ -114,22 +132,22 @@
                   //高斯模糊 只有在iphone下可以看到效果
                 blur = Math.min(20*percent,20)
               }
-              this.$refs.filter.style['backdrop-filter'] = `blur(${blur}px)`
-              this.$refs.filter.style['webkitBackdrop-filter'] = `blur(${blur}px)`
+              this.$refs.filter.style[backdrop] = `blur(${blur}px)`
 
               //动态设定滑动顶部的效果
               if(newY < this.minTranslateY) {
                 zIndex = 10
                 this.$refs.bgImage.style.paddingTop = 0
-                this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}PX`
+                this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`
+                this.$refs.playBtn.style.display = 'none'
               }else{
                 this.$refs.bgImage.style.paddingTop = '70%'
                 this.$refs.bgImage.style.height = 0
+                this.$refs.playBtn.style.display = ''
               }
 
               this.$refs.bgImage.style.zIndex = zIndex
-              this.$refs.bgImage.style['transform'] = `scale(${scale})`
-              this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`
+              this.$refs.bgImage.style[transform] = `scale(${scale})`
           }
       }
     }

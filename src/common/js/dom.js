@@ -23,7 +23,7 @@ export function getData(el, name, val) {
 }
 
 
-
+//用JS做动态的css兼容封装
 let elementStyle = document.createElement('div').style
 
 // IIFE
