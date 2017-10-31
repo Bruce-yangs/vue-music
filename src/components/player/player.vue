@@ -50,7 +50,7 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-
+              <progress-bar :percent="percent"></progress-bar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
 
@@ -100,6 +100,7 @@
   import {mapGetters,mapMutations} from 'vuex'
   import animations from 'create-keyframe-animation'
   import {prefixStyle} from 'common/js/dom'
+  import ProgressBar from 'base/progress-bar/progress-bar'
 
   const transform = prefixStyle('transform')
 
@@ -121,6 +122,9 @@
         },
         disableClass(){
           return this.songReady ? '' : 'disable'
+        },
+        percent(){//算出比例 播放
+            return this.currentTime / this.currentSong.duration
         },
         //mapGetters is Array
       ...mapGetters([
@@ -269,6 +273,9 @@
           newPlaying ? audio.play():audio.pause()
         })
       }
+    },
+    components:{
+      ProgressBar
     }
   }
 </script>
