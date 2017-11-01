@@ -50,14 +50,15 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <progress-bar :percent="percent"></progress-bar>
+              <progress-bar :percent="percent" @percentChange="onpercentBarChange"></progress-bar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
 
           </div>
           <div class="operators">
-            <div class="icon i-left">
-              <i class="icon-sequence"></i>
+            <div class="icon i-left" @click="changeMode">
+              <i :class="iconMode"></i>
+              <!--<i :class="icon-sequence"></i>-->
             </div>
             <div class="icon i-left" :class="disableClass">
               <i class="icon-prev" @click="prev"></i>
@@ -85,7 +86,9 @@
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control"><!--@click.stop阻止冒泡-->
-          <i :class="miniIcon" @click.stop="togglePlaying"></i>
+          <progress-circle :radius="radius" :percent="percent">
+            <i :class="miniIcon" class="icon-mini" @click.stop="togglePlaying"></i>
+          </progress-circle>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
@@ -100,7 +103,9 @@
   import {mapGetters,mapMutations} from 'vuex'
   import animations from 'create-keyframe-animation'
   import {prefixStyle} from 'common/js/dom'
+  import {playMode} from 'common/js/config'
   import ProgressBar from 'base/progress-bar/progress-bar'
+  import ProgressCircle from 'base/progress-circle/progress-circle'
 
   const transform = prefixStyle('transform')
 
@@ -108,7 +113,8 @@
     data(){
         return {
             songReady:false,
-            currentTime:0
+            currentTime:0,
+            radius:32
         }
     },
     computed: {
@@ -123,6 +129,9 @@
         disableClass(){
           return this.songReady ? '' : 'disable'
         },
+        iconMode(){//监听播放模式
+          return this.mode === playMode.sequence? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' :'icon-random'
+        },
         percent(){//算出比例 播放
             return this.currentTime / this.currentSong.duration
         },
@@ -133,6 +142,7 @@
         'currentSong',//当前歌曲
         'playing',//播放状态
         'currentIndex',//播放索引
+        'mode',//播放模式
       ])
     },
     methods:{
@@ -238,13 +248,19 @@
           this.songReady = true
       },
       updateTime(e){
+//        console.log(this.format(this.currentTime))
           this.currentTime = e.target.currentTime
       },
       format(interval){
-        interval = interval | 0
+        interval = interval | 0     // | 0  相当于 Math.floor 向下取整计算
         const minute = interval / 60 | 0
         const second = this._pad(interval % 60)
         return `${minute}:${second}`
+      },
+      changeMode(){//切换播放模式
+          const mode = (this.mode +1) % 3
+
+          this.setPlayMode(mode)//由mapMutations 映射
       },
       _pad(num,n=2){//n代表补充0如：0：01  字符串的长度
         let len = num.toString().length
@@ -254,11 +270,17 @@
         }
         return num
       },
-
+      onpercentBarChange(percent) { //接受 progressBar 组件 派发的事件传的参数percent  动态的设置当前播放音乐的进度
+          this.$refs.audio.currentTime = this.currentSong.duration * percent
+          if(!this.playing) {
+            this.togglePlaying()
+          }
+      },
       ...mapMutations({
             setFullScreen:'SET_FULL_SCREEN',
             setPlayingState:'SET_PLAYING_STATE',
-            setCurrentIndex:'SET_CURRENT_INDEX'
+            setCurrentIndex:'SET_CURRENT_INDEX',
+            setPlayMode:'SET_PLAY_MODE',
       })
     },
     watch:{
@@ -275,7 +297,7 @@
       }
     },
     components:{
-      ProgressBar
+      ProgressBar,ProgressCircle
     }
   }
 </script>
@@ -418,19 +440,20 @@
         .dot-wrapper{
           text-align: center;
           font-size: 0;
-        .dot{
-          display: inline-block;
-          vertical-align: middle;
-          margin: 0 4px;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: $color-text-l;
-          &.active{
-             width: 20px;
-             border-radius: 5px;
-             background: $color-text-ll;
-           }
+          .dot{
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: $color-text-l;
+            &.active{
+               width: 20px;
+               border-radius: 5px;
+               background: $color-text-ll;
+             }
+          }
         }
         .progress-wrapper{
           display: flex;
@@ -455,7 +478,6 @@
             flex: 1;
           }
         }
-      }
       .operators{
         display: flex;
         align-items: center;
