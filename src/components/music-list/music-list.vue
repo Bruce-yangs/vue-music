@@ -6,9 +6,9 @@
    <h1 class="title" v-html="title"></h1>
    <div class="bg-image" :style="bgStyle" ref="bgImage">
      <div class="play-wrapper">
-       <div class="play" v-show="songs.length>0" ref="playBtn">
+       <div class="play" v-show="songs.length>0" ref="playBtn" @click="random">
          <i class="icon-play"></i>
-         <span class="text">随机播放全部</span>
+         <span class="text" >随机播放全部</span>
        </div>
      </div>
      <div class="filter" ref="filter"></div>
@@ -96,8 +96,14 @@
             index
           })
         },
-        ...mapActions([
-          'selectPlay'
+        random() {//点击随机播放
+          this.randomPlay({
+            list:this.songs
+          })
+        },
+        ...mapActions([ /*此处是 store文件里  actions.js配置*/
+          'selectPlay',
+          'randomPlay'
         ])
      /*   _getDetail(){
             if(!this.singer.id) { //处理当用户在当前页面 刷新时  跳转歌手界面

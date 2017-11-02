@@ -31,7 +31,7 @@
             </div>
           </div>
           <!--歌词滚动-->
-          <!--   <scroll class="middle-r" ref="lyriclist" :data="currentLyric && currentLyric.lines">
+             <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines"><!--当有数据的时候就可以初始化 滑动 -->
                <div class="lyric-wrapper">
                  <div v-if="currentLyric">
                    <p ref="lyricLine"
@@ -44,7 +44,7 @@
                    </p>
                  </div>
                </div>
-             </scroll>-->
+             </scroll>
         </div>
         <div class="bottom">
           <div class="progress-wrapper">
@@ -95,7 +95,7 @@
         </div>
       </div>
     </transition>
-    <audio @timeupdate="updateTime" ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
+    <audio @timeupdate="updateTime" @ended="end" ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
   </div>
 </template>
 
@@ -104,8 +104,12 @@
   import animations from 'create-keyframe-animation'
   import {prefixStyle} from 'common/js/dom'
   import {playMode} from 'common/js/config'
+  import {shuffle} from 'common/js/util'
   import ProgressBar from 'base/progress-bar/progress-bar'
   import ProgressCircle from 'base/progress-circle/progress-circle'
+  import Scroll from 'base/scroll/scroll'
+  import Lyric from 'lyric-parser'
+
 
   const transform = prefixStyle('transform')
 
@@ -114,9 +118,12 @@
         return {
             songReady:false,
             currentTime:0,
-            radius:32
+            radius:32,
+            currentLyric:null,
+            currentLineNum:0
         }
     },
+    // 填充歌曲信息 控制歌曲播放
     computed: {
         cdClass(){
             return this.playing ? 'play' : 'play pause'
@@ -143,6 +150,7 @@
         'playing',//播放状态
         'currentIndex',//播放索引
         'mode',//播放模式
+        'sequenceList'//原始列表
       ])
     },
     methods:{
@@ -160,6 +168,18 @@
         }
         this.songReady = false
 
+      },
+      end(){//当歌曲播放完后 如果播放模式不是单曲循环 就进行下一首
+        if(this.mode === playMode.loop) {
+          this.loop()
+        } else {
+          this.next()
+        }
+      },
+      loop() {
+          //当播放结束后 是循环模式的情况 把当前播放时间设置为0 再进行播放
+        this.$refs.audio.currentTime = 0
+        this.$refs.audio.play()
       },
       next() {
         if(!this.songReady){
@@ -258,9 +278,27 @@
         return `${minute}:${second}`
       },
       changeMode(){//切换播放模式
-          const mode = (this.mode +1) % 3
+        const mode = (this.mode +1) % 3
 
-          this.setPlayMode(mode)//由mapMutations 映射
+        this.setPlayMode(mode)//由mapMutations 映射
+
+        let list = null
+        if(mode === playMode.random) {//随机播放
+          list = shuffle(this.sequenceList)
+        }else{//否则就是按顺序播放
+          list = this.sequenceList
+        }
+        //保持当前歌曲播放不变
+        this._resetCurrentIndex(list)
+
+        /*播放模式切换 改变播放列表顺序*/
+        this.setPlaylist(list)
+      },
+      _resetCurrentIndex(list) {//当切换模式后当前歌曲 currentSong 是通过 state.playlist[state.currentIndex] ||　{}计算得来的 避免当前歌曲正在播放被打乱
+        let index = list.findIndex((item) => {//findIndex es6语法
+          return item.id === this.currentSong.id
+        })
+        this.setCurrentIndex(index)
       },
       _pad(num,n=2){//n代表补充0如：0：01  字符串的长度
         let len = num.toString().length
@@ -276,18 +314,44 @@
             this.togglePlaying()
           }
       },
+      getLyric() {//获取到歌词 解析歌词 使用lyric-parser库
+          this.currentSong.getLyric().then((lyric) => {
+            this.currentLyric = new Lyric(lyric, this.handleLyric)
+
+            if(this.playing) {
+              this.currentLyric.play()
+            }
+//            console.log(this.currentLyric)
+          })
+      },
+      handleLyric({lineNum,txt}) {
+          this.currentLineNum = lineNum //是 数组
+        console.log(this.currentLineNum)
+          if(lineNum > 5) {
+              let lineEl = this.$refs.lyricLine[lineNum-5]
+              this.$refs.lyricList.scrollToElement(lineEl,1000) //滚动到居中歌词
+          }else {
+              this.$refs.lyricList.scrollTo(0,0,1000)
+          }
+      },
       ...mapMutations({
             setFullScreen:'SET_FULL_SCREEN',
             setPlayingState:'SET_PLAYING_STATE',
             setCurrentIndex:'SET_CURRENT_INDEX',
             setPlayMode:'SET_PLAY_MODE',
+            setPlaylist:'SET_PLAYLIST',
       })
     },
     watch:{
-      currentSong() {//监听当前歌曲变化
-          this.$nextTick(() => {
-            this.$refs.audio.play()
-          })
+      currentSong(newSong, oldSong) {//监听当前歌曲变化
+        if(newSong.id === oldSong.id) {
+          return
+        }
+        this.$nextTick(() => {
+          this.$refs.audio.play()
+          this.getLyric()
+//          this.currentSong.getLyric()
+        })
       },
       playing(newPlaying) {//监听歌曲 播放状态
         const audio = this.$refs.audio
@@ -297,7 +361,7 @@
       }
     },
     components:{
-      ProgressBar,ProgressCircle
+      ProgressBar,ProgressCircle,Scroll
     }
   }
 </script>

@@ -28,15 +28,15 @@
     },
     created() {
         //实例touch 之间的共享数据
-        this.touch = {
-
-        }
+        this.touch = {}
     },
     methods: {
+      // 进度条拖动效果
       progressTouchStart(e) {
         /*initiated = true 意味着已经接触屏幕*/
         this.touch.initiated = true
         this.touch.startX = e.touches[0].pageX
+        // 当前移动的位置
         this.touch.left = this.$refs.progress.clientWidth
       },
       progressTouchMove(e) {
@@ -46,7 +46,7 @@
         const deltaX = e.touches[0].pageX - this.touch.startX
 
         /*算出移动的范围*/
-        const offsetWidth = Math.min(this.$refs.progressBar.clientWidth - progressBtnWidth,Math.max(0,this.touch.left + deltaX))
+        const offsetWidth = Math.min(Math.max(0,this.touch.left + deltaX),this.$refs.progressBar.clientWidth - progressBtnWidth)
 
         /*实时移动按钮的位置*/
         this._offset(offsetWidth)
@@ -69,7 +69,18 @@
         this.$emit('percentChange',percent)
       },
       progressClick(e) {//点击哪就播放哪的音乐
-        this._offset(e.offsetX)
+        //e.offsetX 值是有问题的
+        //this._offset(e.offsetX)
+        const rect = this.$refs.progressBar.getBoundingClientRect()
+        const offsetWidth = e.pageX - rect.left
+        if(offsetWidth < 1 || offsetWidth > rect.width){
+            return
+        } else {
+          this._offset(offsetWidth)
+        }
+        console.log(rect)
+        /*console.log(e.pageX)
+        console.log(offsetWidth)*/
         this._triggerPercent()
       }
     },

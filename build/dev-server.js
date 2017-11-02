@@ -41,6 +41,32 @@ apiRoutes.get('/getDiscList', function (req,res) {
     console.log(e)
   })
 })
+
+//抓取歌词
+apiRoutes.get('/lyric', function (req,res) {
+  const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+  axios.get(url, {//请求线上地址拿到数据 返回给客户端
+    headers:{//此处配置的请求头就是为了绕过 qq音乐的限制
+      referer: 'https://c.y.qq.com',
+      host:'c.y.qq.com'
+    },
+    params:req.query
+  }).then((response) => {
+    var ret = response.data
+    if(typeof ret === 'string') {
+
+      /*匹配歌词转换*/
+      var reg = /^\w+\(({[^()]+})\)$/
+      var matches = ret.match(reg)
+      if(matches) {
+        ret = JSON.parse(matches[1])
+      }
+    }
+    res.json(ret)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
 app.use('/api',apiRoutes)
 
 
