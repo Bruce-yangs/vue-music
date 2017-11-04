@@ -73,11 +73,13 @@
         //this._offset(e.offsetX)
         const rect = this.$refs.progressBar.getBoundingClientRect()
         const offsetWidth = e.pageX - rect.left
-        if(offsetWidth < 1 || offsetWidth > rect.width){
+      /*  if(offsetWidth < 1 || offsetWidth > rect.width){
             return
         } else {
           this._offset(offsetWidth)
-        }
+        }*/
+        this._offset(offsetWidth)
+
         console.log(rect)
         /*console.log(e.pageX)
         console.log(offsetWidth)*/
@@ -122,15 +124,15 @@
         width: 30px;
         height: 30px;
           .progress-btn{
-           position: relative;
-           left:7px;
-           top:7px;
-           width: 16px;
-           height:16px;
-           box-sizing: border-box;
-           border:3px solid $color-text;
-           border-radius:50%;
-           background: $color-theme;
+             position: relative;
+             left:7px;
+             top:7px;
+             width: 16px;
+             height:16px;
+             box-sizing: border-box;
+             border:3px solid $color-text;
+             border-radius:50%;
+             background: $color-theme;
          }
       }
     }
