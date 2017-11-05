@@ -24,6 +24,14 @@
       listenScroll: {
         type: Boolean,
         default:false
+      },
+      pullup: {
+        type: Boolean,
+        default:false
+      },
+      beforeScroll: {
+        type: Boolean,
+        default:false
       }
     },
     methods: {
@@ -42,6 +50,18 @@
                 let me = this
                 this.scroll.on('scroll', (pos) => {
                   me.$emit('scroll', pos) //派发事件
+                })
+            }
+            if(this.pullup) {/*上拉加载更多*/
+                this.scroll.on('scrollEnd', () => {
+                    if(this.scroll.y <= (this.scroll.maxScrollY +50)) {
+                        this.$emit('scrollToEnd')
+                    }
+                })
+            }
+            if(this.beforeScroll) {
+                this.scroll.on('beforeScrollStart',() => {
+                    this.$emit('beforeScroll')
                 })
             }
       },
