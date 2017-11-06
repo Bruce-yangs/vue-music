@@ -101,11 +101,12 @@
             <i :class="miniIcon" class="icon-mini" @click.stop="togglePlaying"></i>
           </progress-circle>
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlaylist">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio @timeupdate="updateTime" @ended="end" ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
   </div>
 </template>
@@ -120,6 +121,7 @@
   import ProgressCircle from 'base/progress-circle/progress-circle'
   import Scroll from 'base/scroll/scroll'
   import Lyric from 'lyric-parser'
+  import Playlist from 'components/playlist/playlist'
 
 
   const transform = prefixStyle('transform')
@@ -171,6 +173,9 @@
         this.touch = {}
     },
     methods:{
+      showPlaylist(){
+          this.$refs.playlist.show()
+      },
       prev() {
         if(!this.songReady){
             return
@@ -450,6 +455,9 @@
     },
     watch:{
       currentSong(newSong, oldSong) {//监听当前歌曲变化
+        if(!newSong.id) {
+          return
+        }
         if(newSong.id === oldSong.id) {
           return
         }
@@ -472,7 +480,7 @@
       }
     },
     components:{
-      ProgressBar,ProgressCircle,Scroll
+      ProgressBar,ProgressCircle,Scroll,Playlist
     }
   }
 </script>

@@ -2,6 +2,7 @@
 import * as types from './mutation-types'
 import {playMode} from 'common/js/config'
 import {shuffle} from 'common/js/util'
+import {saveSearch,deleteSearch,clearSearch} from 'common/js/cache'
 
 function findIndex(list, song) {
   return list.findIndex((item) => {
@@ -85,3 +86,51 @@ export const insertSong = function ({commit, state},song) {
   commit(types.SET_PLAYING_STATE,true)
 }
 
+
+/*封装本地缓存*/
+export const saveSearchHistory = function ({commit},query) {
+  commit(types.SET_SEARCH_HISTORY,saveSearch(query))
+}
+
+/*删除存储*/
+export const deleteSearchHistory = function ({commit},query) {
+  commit(types.SET_SEARCH_HISTORY,deleteSearch(query))//调取deleSearch函数  从SET_SEARCH_HISTORY删除返回新的数组 提交到mutations
+}
+
+/*清除所有存储*/
+export const clearSearchHistory = function ({commit}) {
+  commit(types.SET_SEARCH_HISTORY,clearSearch())//调取clearSearch函数  从SET_SEARCH_HISTORY清除所有数据 提交到mutations
+}
+
+/*删除歌曲*/
+export const deleteSong = function ({commit,state},song) {
+  let playlist = state.playlist.slice()
+  let sequenceList = state.sequenceList.slice()//.slice() 相当于修改了mutations 的副本 所以不会警告报错
+  let currentIndex = state.currentIndex
+
+  let pIndex = findIndex(playlist,song)
+  playlist.splice(pIndex, 1)
+
+  let sIndex = findIndex(sequenceList,song)
+  sequenceList.splice(sIndex, 1)
+
+  if(currentIndex > pIndex || currentIndex === playlist.length) {
+    currentIndex--
+  }
+
+  commit(types.SET_PLAYLIST,playlist)
+  commit(types.SET_SEQUENCE_LIST,sequenceList)
+  commit(types.SET_CURRENT_INDEX,currentIndex)
+
+  const playingState = playlist.length > 0
+
+  commit(types.SET_PLAYING_STATE,playingState)
+}
+
+/*清除所有播放列表*/
+export const deleteSongList = function ({commit}) {
+  commit(types.SET_PLAYLIST,[])
+  commit(types.SET_SEQUENCE_LIST,[])
+  commit(types.SET_CURRENT_INDEX,-1)
+  commit(types.SET_PLAYING_STATE,false)
+}

@@ -68,6 +68,11 @@
         }else {
             this.insertSong(item)
         }
+        /*向父组件派发 事件 监听存储播放历史*/
+        this.$emit('select')
+      },
+      refresh(){
+          this.$refs.suggest.refresh()
       },
       search() {
         /*当输入框发生变化后 重新初始化scroll组件*/
