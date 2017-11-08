@@ -76,9 +76,6 @@ export function savePlay(song) {
   let songs = storage.get(PLAY_KEY, [])
 
   insertArray(songs,song,(item) => {
-    alert(0)
-    console.log(song.id+'---song')
-    console.log(item.id+'---item')
     return item.id === song.id
   },PLAY_MAX_LENGTH)
 
