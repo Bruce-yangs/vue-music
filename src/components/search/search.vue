@@ -4,7 +4,7 @@
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
     <div class="shortcut-wrapper" v-show="!query" ref="shortcutWrapper">
-      <scroll class="shortcut" ref="shortcut" :data="shortcut">
+      <scroll :refreshDelay="refreshDelay" class="shortcut" ref="shortcut" :data="shortcut">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -43,14 +43,15 @@
   import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
   import Suggest from 'components/suggest/suggest'
-  import {playlistMixin} from 'common/js/mixin'
-  import {mapActions,mapGetters} from 'vuex'
+  import {playlistMixin,searchMixin} from 'common/js/mixin'
+  import {mapActions} from 'vuex'
   export default {
-    mixins: [playlistMixin],
+    mixins: [playlistMixin,searchMixin],
     data(){
       return{
         hotKey:[],
-        query:''
+        query:'',
+        refreshDelay:100
       }
     },
     components: {
@@ -76,23 +77,8 @@
           console.log(res.data.hotkey)
         })
       },
-      addQuery(item) {/*父组件 通过调取子组件方法 传值*/
-        this.$refs.searchBox.setQuery(item)
-     },
-      /*监听输入框的内容*/
-      onQueryChange(query) {
-        this.query = query
-      },
-      /*失去焦点 调取子组件的方法*/
-      blurInput(){
-        this.$refs.searchBox.blur()
-      },
       showConfirm() {/*调用confirm*/
           this.$refs.confirm.show()
-      },
-      /*保存搜索结果*/
-      saveSearch(){
-        this.saveSearchHistory(this.query)
       },
      //此处如果只是简单的执行删除功能  可以直接 把mapActions定义的事件 赋值到对应的绑定事件上 从而减少代码量
      /* deleteOne(item){
@@ -102,16 +88,13 @@
         this.clearSearchHistory()
       },*/
       ...mapActions([
-        'saveSearchHistory','deleteSearchHistory','clearSearchHistory'
+        'clearSearchHistory'
       ])
     },
     computed:{
       shortcut() {/*监听两者 任一 一个有变化就重新计算 scroll*/
           return this.hotKey.concat(this.searchHistory)
-      },
-      ...mapGetters([
-        'searchHistory'
-      ])
+      }
     },
     watch: {
       query(newQuery) {

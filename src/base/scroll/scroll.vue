@@ -6,7 +6,6 @@
 
 <script>
   import BScroll from 'better-scroll'
-  import {addClass} from 'common/js/dom'
   export default {
     props: {
       probeType: {
@@ -32,6 +31,10 @@
       beforeScroll: {
         type: Boolean,
         default:false
+      },
+      refreshDelay: {
+        type: Number,
+        default: 20
       }
     },
     methods: {
@@ -59,6 +62,7 @@
                     }
                 })
             }
+          // 开始滚动前判断
             if(this.beforeScroll) {
                 this.scroll.on('beforeScrollStart',() => {
                     this.$emit('beforeScroll')
@@ -86,7 +90,7 @@
         data() {
           setTimeout(() => {
             this.refresh()
-          },20)
+          },this.refreshDelay)
         }
     },
     mounted() {

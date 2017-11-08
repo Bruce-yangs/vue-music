@@ -112,22 +112,23 @@
 </template>
 
 <script>
-  import {mapGetters,mapMutations} from 'vuex'
+  import {mapGetters,mapMutations,mapActions} from 'vuex'
   import animations from 'create-keyframe-animation'
   import {prefixStyle} from 'common/js/dom'
-  import {playMode} from 'common/js/config'
-  import {shuffle} from 'common/js/util'
   import ProgressBar from 'base/progress-bar/progress-bar'
   import ProgressCircle from 'base/progress-circle/progress-circle'
   import Scroll from 'base/scroll/scroll'
   import Lyric from 'lyric-parser'
   import Playlist from 'components/playlist/playlist'
+  import {playerMixin} from 'common/js/mixin'
+  import {playMode} from 'common/js/config'
 
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
 
   export default {
+    mixins:[playerMixin],
     data(){
         return {
             songReady:false,
@@ -152,21 +153,17 @@
         disableClass(){
           return this.songReady ? '' : 'disable'
         },
-        iconMode(){//监听播放模式
-          return this.mode === playMode.sequence? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' :'icon-random'
-        },
         percent(){//算出比例 播放
             return this.currentTime / this.currentSong.duration
         },
         //mapGetters is Array
       ...mapGetters([
         'fullScreen',//播放器显示/隐藏
-        'playlist',//播放器渲染
-        'currentSong',//当前歌曲
+       /* 'playlist',//播放器渲染
+        'currentSong',//当前歌曲*/
         'playing',//播放状态
         'currentIndex',//播放索引
-        'mode',//播放模式
-        'sequenceList'//原始列表
+
       ])
     },
     created(){
@@ -307,6 +304,7 @@
       },
       ready(){
           this.songReady = true
+          this.savePlayHistory(this.currentSong)
       },
       error(){
           this.songReady = true
@@ -320,29 +318,6 @@
         const minute = interval / 60 | 0
         const second = this._pad(interval % 60)
         return `${minute}:${second}`
-      },
-      changeMode(){//切换播放模式
-        const mode = (this.mode +1) % 3
-
-        this.setPlayMode(mode)//由mapMutations 映射
-
-        let list = null
-        if(mode === playMode.random) {//随机播放
-          list = shuffle(this.sequenceList)
-        }else{//否则就是按顺序播放
-          list = this.sequenceList
-        }
-        //保持当前歌曲播放不变
-        this._resetCurrentIndex(list)
-
-        /*播放模式切换 改变播放列表顺序*/
-        this.setPlaylist(list)
-      },
-      _resetCurrentIndex(list) {//当切换模式后当前歌曲 currentSong 是通过 state.playlist[state.currentIndex] ||　{}计算得来的 避免当前歌曲正在播放被打乱
-        let index = list.findIndex((item) => {//findIndex es6语法
-          return item.id === this.currentSong.id
-        })
-        this.setCurrentIndex(index)
       },
       _pad(num,n=2){//n代表补充0如：0：01  字符串的长度
         let len = num.toString().length
@@ -446,12 +421,12 @@
 
       },
       ...mapMutations({
-            setFullScreen:'SET_FULL_SCREEN',
-            setPlayingState:'SET_PLAYING_STATE',
-            setCurrentIndex:'SET_CURRENT_INDEX',
-            setPlayMode:'SET_PLAY_MODE',
-            setPlaylist:'SET_PLAYLIST',
-      })
+          setFullScreen:'SET_FULL_SCREEN'
+
+      }),
+      ...mapActions([
+          'savePlayHistory'
+      ])
     },
     watch:{
       currentSong(newSong, oldSong) {//监听当前歌曲变化

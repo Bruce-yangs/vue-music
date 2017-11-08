@@ -1,10 +1,12 @@
 <template>
   <scroll class="suggest" ref="suggest"
-          :data="result" @scrollToEnd="searchMore" @beforeScroll="listScroll"
+          :data="result"
+          @scrollToEnd="searchMore"
+          @beforeScroll="listScroll"
           :pullup="pullup"
           :beforeScroll="beforeScroll">
     <ul class="suggest-list">
-      <li @click="selectItem(item)" class="suggest-item" v-for="item in result">
+      <li @click="selectItem(item)" class="suggest-item" :key="item.key" v-for="item in result">
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -93,14 +95,14 @@
           return
         }
         this.page ++
-        this.search(this.query,this.page,this.showSinger,perpage).then((res) => {
+        search(this.query,this.page,this.showSinger,perpage).then((res) => {
           if(res.code === ERR_OK) {
             this.result = this.result.concat(this.getResult(res.data))
             this._checkMore(res.data)
           }
         })
       },
-      listScroll(){
+      listScroll(){/*search组件监听listScroll派发的事件*/
           this.$emit('listScroll')
       },
       _checkMore(data){/*监听是否 还有数据 没有更多就不加载*/
