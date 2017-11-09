@@ -6,6 +6,11 @@ const SEARCH_MAX_LENGTH = 15 //最大存储15条数据
 const PLAY_KEY = '__play__'
 const PLAY_MAX_LENGTH = 200  //最近播放歌曲的最大值
 
+const FAVORITE_KEY = '__favorite__'
+const FAVORITE_MAX_LENGTH = 200  //最近播放歌曲的最大值
+
+
+
                               //比较函数   最大值
 function insertArray(arr, val, compare, maxLen) {
   const index = arr.findIndex(compare)//匹配到返回 当前索引，未匹配到返回-1
@@ -88,3 +93,36 @@ export function savePlay(song) {
 export function loadPlay() {
   return storage.get(PLAY_KEY, [])
 }
+
+
+/*思路：同上*/
+//用户喜欢的歌曲
+export function saveFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+
+
+  insertArray(songs,song,(item) => {
+    return item.id === song.id
+  },FAVORITE_MAX_LENGTH)
+
+  storage.set(FAVORITE_KEY,songs)//存储处理后的值
+  return songs
+}
+
+/*删除用户喜欢的本地存储播放的值*/
+export function deleteFavorite(song) {
+  return storage.get(FAVORITE_KEY, [])
+  deleteFromArray(songs, (item) => {
+    return item.id === song.id
+  })
+  storage.set(FAVORITE_KEY,songs)//存储处理后的值
+  return songs
+}
+
+/*读取本地存储 用户喜欢播放的值*/
+export function loadFavorite() {
+  return storage.get(FAVORITE_KEY, [])
+}
+
+
+
