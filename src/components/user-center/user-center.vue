@@ -24,6 +24,9 @@
             </div>
           </scroll>
       </div>
+      <div class="no-result-wrapper" v-show="noResult">
+        <no-result :title="noResultDesc"></no-result>
+      </div>
     </div>
   </transition>
 </template>
@@ -32,6 +35,7 @@
   import Switches from 'base/switches/switches'
   import SongList from 'base/song-list/song-list'
   import Scroll from 'base/scroll/scroll'
+  import NoResult from 'base/no-result/no-result'
   import Song from 'common/js/song'
   import {mapGetters,mapActions} from 'vuex'
   import {playerMixin} from 'common/js/mixin'
@@ -55,6 +59,23 @@
         }
     },
     computed: {
+      noResult() {//监听是否 结果
+          if(this.currentIndex === 0) {
+              return !this.favoriteList.length
+          }else {
+            return !this.playHistory.length
+
+          }
+      },
+      noResultDesc() {//传当无结果时 的显示
+          if(this.currentIndex === 0) {
+              return '暂无收藏歌曲'
+          }else {
+            return '你还没听过歌曲'
+
+          }
+      },
+
       ...mapGetters([
         'playHistory',
         'favoriteList'
@@ -80,6 +101,7 @@
         //判断随机播放的类型
         let list = this.currentIndex === 0 ? this.favoriteList : this.playHistory
 
+        if(list.length === 0) return
         list = list.map((song) => {
             return new Song(song)
         })
@@ -95,7 +117,7 @@
       ])
     },
     components: {
-      Switches,SongList,Scroll
+      Switches,SongList,Scroll,NoResult
     }
   }
 </script>

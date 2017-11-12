@@ -107,7 +107,7 @@
       </div>
     </transition>
     <playlist ref="playlist"></playlist>
-    <audio @timeupdate="updateTime" @ended="end" ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
+    <audio @timeupdate="updateTime" @ended="end" ref="audio" :src="currentSong.url" @play="ready" @error="error"></audio>
   </div>
 </template>
 
@@ -180,6 +180,7 @@
         /*当歌曲列表 只有一首歌的时候 切换成单曲循环 否则正常切换*/
         if (this.playlist.length === 1) {
           this.loop()
+          return
         }else{
           let index = this.currentIndex -1
           if(index === -1) {
@@ -218,7 +219,8 @@
           return
         }
         if (this.playlist.length === 1) {
-            this.loop()
+          this.loop()
+          return
         }else{
           let index = this.currentIndex +1
           if(index === this.playlist.length) {
@@ -343,6 +345,9 @@
           this.currentSong.getLyric().then((lyric) => {
             this.currentLyric = new Lyric(lyric, this.handleLyric)
 
+            if(this.currentSong.lyric !== lyric) {
+              return
+            }
             if(this.playing) {
               this.currentLyric.play()
             }
@@ -443,7 +448,8 @@
           this.currentLyric.stop()
         }
         /*此处优化 微信在后台  重新进入后的播放*/
-        setTimeout(() => {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
           this.$refs.audio.play()
           this.getLyric()
 //          this.currentSong.getLyric()
