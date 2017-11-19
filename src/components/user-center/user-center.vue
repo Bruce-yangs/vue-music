@@ -38,13 +38,13 @@
   import NoResult from 'base/no-result/no-result'
   import Song from 'common/js/song'
   import {mapGetters,mapActions} from 'vuex'
-  import {playerMixin} from 'common/js/mixin'
+  import {playlistMixin} from 'common/js/mixin'
 
   /*import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'*/
 
   export default {
-    mixins:[playerMixin],
+    mixins:[playlistMixin],
     data() {
         return {
           currentIndex: 0,
@@ -82,7 +82,7 @@
       ])
     },
     methods: {
-      handlePlayList(playlist) {
+      handlePlaylist (playlist) {//重新计算高度 避免mini播放器遮挡
         const bottom = playlist.length > 0 ? '60px' : ''
         this.$refs.listWrapper.style.bottom = bottom
         this.$refs.favoriteList && this.$refs.favoriteList.refresh()

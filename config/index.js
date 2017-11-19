@@ -8,6 +8,7 @@ const path = require('path')
 module.exports = {
   build: {
     env: require('./prod.env'),
+    port:9000,
     index: path.resolve(__dirname, '../dist/index.html'),//生成当前项目根目录下的dist文件夹
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',

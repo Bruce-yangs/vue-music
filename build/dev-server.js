@@ -138,7 +138,7 @@ app.use(require('connect-history-api-fallback')())
 // serve webpack bundle output
 app.use(devMiddleware)
 
-// serve pure static common
+// serve pure static common 静态资源
 const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
