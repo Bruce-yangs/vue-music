@@ -16,10 +16,8 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
-
-# online address
-[address](https://bruce-yangs.github.io/vueMusic/)
 ```
-
+# online address
+[https://bruce-yangs.github.io/vueMusic/](https://bruce-yangs.github.io/vueMusic/)
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
