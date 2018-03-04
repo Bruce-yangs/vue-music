@@ -18,7 +18,7 @@ npm run build
 npm run build --report
 
 # online address
-[https://bruce-yangs.github.io/vueMusic/](https://bruce-yangs.github.io/vueMusic/)
+[address](https://bruce-yangs.github.io/vueMusic/)
 ```
 
 
