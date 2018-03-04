@@ -10,7 +10,7 @@ export function getSingerList() {
     key: 'all_all_all',
     pagesize: 100,
     pagenum: 1,
-    g_tk: 5381,
+    g_tk: 1047875849,
     loginUin: 0,
     hostUin: 0,
     format: 'jsonp',

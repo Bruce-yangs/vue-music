@@ -6,7 +6,7 @@ export function getRecommend() {//获取banner
   const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
 
   const  data = Object.assign({},commonParams,{
-    uin:0,
+    uin:469402333,
     platform:'h5',
     needNewCode:1
   })
