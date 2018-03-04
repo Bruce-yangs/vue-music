@@ -4,6 +4,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+//这种写法是配合 webpack 异步加载  路由懒加载
 const Singer = (resolve) => {
   import('components/singer/singer').then((module) => {
     resolve(module)

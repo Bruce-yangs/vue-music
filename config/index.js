@@ -12,7 +12,7 @@ module.exports = {
     index: path.resolve(__dirname, '../dist/index.html'),//生成当前项目根目录下的dist文件夹
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',
+    assetsPublicPath: '/',
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static common for you.
