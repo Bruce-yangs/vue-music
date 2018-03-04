@@ -11,7 +11,7 @@ export function getSingerList() {
     pagesize: 100,
     pagenum: 1,
     g_tk: 1047875849,
-    loginUin: 0,
+    loginUin: 469402333,
     hostUin: 0,
     format: 'jsonp',
     inCharset: 'utf8',

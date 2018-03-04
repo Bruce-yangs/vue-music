@@ -144,7 +144,8 @@
     computed: {
         cdClass(){
             return this.playing ? 'play' : 'play pause'
-        },playIcon(){
+        },
+      playIcon(){
             return this.playing ? 'icon-pause' : 'icon-play'
         },
         miniIcon(){
