@@ -23,8 +23,7 @@
 </template>
 
 <script>
-  import {getTopListDetail} from 'api/rank'
-//  import {getTopList} from 'api/rank'
+  import {getTopList} from 'api/rank'
   import {ERR_OK} from 'api/config'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
@@ -49,7 +48,7 @@
         this.$refs.toplist.refresh()
       },
       _getTopList(){
-        getTopListDetail().then((res) => {
+          getTopList().then((res) => {
             if(res.code === ERR_OK) {
                 this.topList = res.data.topList
                 console.log(res)
