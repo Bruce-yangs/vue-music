@@ -1,43 +1,44 @@
 <template>
   <transition name="list-fade">
-      <div class="playlist" v-show="showFlag" @click="hide">
-        <div class="list-wrapper"  @click.stop><!--@click.stop阻止事件向上冒泡-->
-          <div class="list-header">
-            <h1 class="title">
-              <i class="icon" :class="iconMode" @click="changeMode"></i>
-              <span class="text">{{modeText}}</span>
-              <span class="clear" @click="deleteAll">
+    <div class="playlist" v-show="showFlag" @click="hide">
+      <div class="list-wrapper" @click.stop><!--@click.stop阻止事件向上冒泡-->
+        <div class="list-header">
+          <h1 class="title">
+            <i class="icon" :class="iconMode" @click="changeMode"></i>
+            <span class="text">{{modeText}}</span>
+            <span class="clear" @click="deleteAll">
                 <i class="icon-clear"></i>
               </span>
-            </h1>
-          </div>
-          <scroll class="list-content" :data="sequenceList" :refreshDelay="refreshDelay" ref="listContent">
-            <transition-group name="list" tag="ul"> <!--:key 根据transition-group 需要子元素的:key="item.id"-->
-              <li :key="item.id" class="item" ref="listItem" v-for="(item,index) in sequenceList" @click="selectItem(item,index)">
-                <i class="current" :class="getCurrentIcon(item)"></i>
-                <span class="text">{{item.name}}</span>
-                <span class="like"  @click.stop="toggleFavorite(item)">
+          </h1>
+        </div>
+        <scroll class="list-content" :data="sequenceList" :refreshDelay="refreshDelay" ref="listContent">
+          <transition-group name="list" tag="ul"> <!--:key 根据transition-group 需要子元素的:key="item.id"-->
+            <li :key="item.id" class="item" ref="listItem" v-for="(item,index) in sequenceList"
+                @click="selectItem(item,index)">
+              <i class="current" :class="getCurrentIcon(item)"></i>
+              <span class="text">{{item.name}}</span>
+              <span class="like" @click.stop="toggleFavorite(item)">
                   <i :class="getFavoriteIcon(item)"></i>
                 </span>
-                <span class="delete" @click.stop="deleteOne(item)">
+              <span class="delete" @click.stop="deleteOne(item)">
                   <i class="icon-delete"></i>
                 </span>
-              </li>
-            </transition-group>
-          </scroll>
-          <div class="list-operate">
-            <div class="add" @click="addSong">
-              <i class="icon-add"></i>
-              <span class="text">添加歌曲到队列</span>
-            </div>
-          </div>
-          <div class="list-close" @click="hide">
-            <span>关闭</span>
+            </li>
+          </transition-group>
+        </scroll>
+        <div class="list-operate">
+          <div class="add" @click="addSong">
+            <i class="icon-add"></i>
+            <span class="text">添加歌曲到队列</span>
           </div>
         </div>
-        <confirm ref="confirm" text="是否清空播放列表" confirmBtnText="清空" @confirm="confirmClear"></confirm>
-        <add-song ref="addSong"></add-song>
+        <div class="list-close" @click="hide">
+          <span>关闭</span>
+        </div>
       </div>
+      <confirm ref="confirm" text="是否清空播放列表" confirmBtnText="清空" @confirm="confirmClear"></confirm>
+      <add-song ref="addSong"></add-song>
+    </div>
   </transition>
 </template>
 
@@ -50,11 +51,11 @@
   import AddSong from 'components/add-song/add-song'
 
   export default {
-    mixins:[playerMixin],
+    mixins: [playerMixin],
     data(){
       return {
         showFlag: false,
-        refreshDelay:100
+        refreshDelay: 100
       }
     },
     props: {
@@ -63,17 +64,17 @@
         default: ''
       }
     },
-    computed:{
+    computed: {
       modeText() {
-          return this.mode === playMode.sequence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
+        return this.mode === playMode.sequence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
       }
     },
-    components:{
-      Scroll,Confirm,AddSong
+    components: {
+      Scroll, Confirm, AddSong
     },
     methods: {
       deleteAll(){
-          this.$refs.confirm.show()
+        this.$refs.confirm.show()
       },
       show() {
         this.showFlag = true
@@ -81,19 +82,19 @@
         setTimeout(() => {
           this.$refs.listContent.refresh()
           this.scrollToCurrent(this.currentSong)
-        },20)
+        }, 20)
       },
       hide() {
         this.showFlag = false
       },
       getCurrentIcon(item) {
-        if(this.currentSong.id === item.id) {
+        if (this.currentSong.id === item.id) {
           return 'icon-play'
         }
         return ''
       },
-      selectItem(item,index) {/*当点击播放列表的歌曲   播放对应的 歌曲*/
-        if(this.mode === playMode.random) {
+      selectItem(item, index) {/*当点击播放列表的歌曲   播放对应的 歌曲*/
+        if (this.mode === playMode.random) {
           index = this.playlist.findIndex((song) => {
             return song.id === item.id
           })
@@ -105,12 +106,12 @@
         const index = this.playlist.findIndex((song) => {
           return current.id === song.id
         })
-        this.$refs.listContent.scrollToElement(this.$refs.listItem[index],300)
+        this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300)
       },
       deleteOne(item) {/*调取 mapActions deleteSong*/
         this.deleteSong(item)
-        if(!this.playlist.length) {
-            this.hide()
+        if (!this.playlist.length) {
+          this.hide()
         }
       },
       confirmClear(){
@@ -120,15 +121,15 @@
       },
       /*添加歌曲*/
       addSong(){
-          this.$refs.addSong.show()
+        this.$refs.addSong.show()
       },
       ...mapActions([
-          'deleteSong','deleteSongList'
+        'deleteSong', 'deleteSongList'
       ])
     },
     watch: {
       currentSong(newSong, oldSong) {
-        if(!this.showFlag || newSong.id === oldSong.id) {
+        if (!this.showFlag || newSong.id === oldSong.id) {
           return
         }
         this.scrollToCurrent(newSong)
@@ -141,127 +142,127 @@
   @import '~common/sass/variable.scss';
   @import '~common/sass/mixin.scss';
 
-  .playlist{
+  .playlist {
     position: fixed;
-    left:0;
+    left: 0;
     right: 0;
-    top:0;
-    bottom:0;
-    z-index:200;
+    top: 0;
+    bottom: 0;
+    z-index: 200;
     background-color: $color-background-d;
-    &.list-fade-enter-active,&.list-fade-leave-active{
-      transition:opacity 0.3s;
-      .list-wrapper{
+    &.list-fade-enter-active, &.list-fade-leave-active {
+      transition: opacity 0.3s;
+      .list-wrapper {
         transition: all .3s;
       }
     }
-    &.list-fade-enter,&.list-fade-leave-to{
-      opacity:0;
-      .list-wrapper{
-        transform: translate3d(0,100%,0);
+    &.list-fade-enter, &.list-fade-leave-to {
+      opacity: 0;
+      .list-wrapper {
+        transform: translate3d(0, 100%, 0);
       }
     }
-      /*&.list-fade-enter{*/
-      .list-wrapper{
-        position: absolute;
-        left:0;
-        bottom:0;
-        width:100%;
-        background-color: $color-highlight-background;
-        .list-header{
-          position: relative;
-          padding: 20px 30px 10px 20px;
-          .title{
-            display: flex;
-            align-items: center;
-            .icon{
-              margin-right: 10px;
-              font-size: 30px;
-              color: $color-theme-d;
-            }
-            .text{
-              flex: 1;
-              font-size: $font-size-medium;
-              color: $color-text-l;
-            }
-            .clear{
-              @include extend-click;
-              .icon-clear{
-                font-size: $font-size-medium;
-                color: $color-text-d;
-              }
-            }
+    /*&.list-fade-enter{*/
+    .list-wrapper {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: $color-highlight-background;
+      .list-header {
+        position: relative;
+        padding: 20px 30px 10px 20px;
+        .title {
+          display: flex;
+          align-items: center;
+          .icon {
+            margin-right: 10px;
+            font-size: 30px;
+            color: $color-theme-d;
           }
-        }
-        .list-content{
-          max-height: 240px;
-          overflow: hidden;
-          .item{
-            display: flex;
-            align-items: center;
-            height: 40px;
-            padding: 0 30px 0 20px;
-            &.list-enter-active, &.list-leave-active{
-              transition: all 0.1s linear;
-            }
-            &.list-enter, &.list-leave-to{
-              height: 0;
-            }
-            .current{
-              flex: 0 0 20px;
-              width: 20px;
-              font-size: $font-size-small;
-              color: $color-theme-d;
-            }
-            .text{
-              flex: 1;
-              @include no-wrap;
+          .text {
+            flex: 1;
+            font-size: $font-size-medium;
+            color: $color-text-l;
+          }
+          .clear {
+            @include extend-click;
+            .icon-clear {
               font-size: $font-size-medium;
               color: $color-text-d;
             }
-            .like{
-                @include extend-click;
-                margin-right: 15px;
-                font-size: $font-size-small;
-                color: $color-theme;
-                .icon-favorite{
-                  color: $color-sub-theme;
-                }
-            }
-            .delete{
-              @include extend-click;
-              font-size: $font-size-small;
-              color: $color-theme;
-            }
           }
-        }
-        .list-operate{
-          width: 140px;
-          margin: 20px auto 30px auto;
-          .add{
-            display: flex;
-            align-items: center;
-            padding: 8px 16px;
-            border: 1px solid $color-text-l;
-            border-radius: 100px;
-            color: $color-text-l;
-            .icon-add{
-              margin-right: 5px;
-              font-size: $font-size-small-s;
-            }
-            .text{
-              font-size: $font-size-small;
-            }
-          }
-        }
-        .list-close{
-          text-align: center;
-          line-height: 50px;
-          background: $color-background;
-          font-size: $font-size-medium-x;
-          color: $color-text-l;
         }
       }
+      .list-content {
+        max-height: 240px;
+        overflow: hidden;
+        .item {
+          display: flex;
+          align-items: center;
+          height: 40px;
+          padding: 0 30px 0 20px;
+          &.list-enter-active, &.list-leave-active {
+            transition: all 0.1s linear;
+          }
+          &.list-enter, &.list-leave-to {
+            height: 0;
+          }
+          .current {
+            flex: 0 0 20px;
+            width: 20px;
+            font-size: $font-size-small;
+            color: $color-theme-d;
+          }
+          .text {
+            flex: 1;
+            @include no-wrap;
+            font-size: $font-size-medium;
+            color: $color-text-d;
+          }
+          .like {
+            @include extend-click;
+            margin-right: 15px;
+            font-size: $font-size-small;
+            color: $color-theme;
+            .icon-favorite {
+              color: $color-sub-theme;
+            }
+          }
+          .delete {
+            @include extend-click;
+            font-size: $font-size-small;
+            color: $color-theme;
+          }
+        }
+      }
+      .list-operate {
+        width: 140px;
+        margin: 20px auto 30px auto;
+        .add {
+          display: flex;
+          align-items: center;
+          padding: 8px 16px;
+          border: 1px solid $color-text-l;
+          border-radius: 100px;
+          color: $color-text-l;
+          .icon-add {
+            margin-right: 5px;
+            font-size: $font-size-small-s;
+          }
+          .text {
+            font-size: $font-size-small;
+          }
+        }
+      }
+      .list-close {
+        text-align: center;
+        line-height: 50px;
+        background: $color-background;
+        font-size: $font-size-medium-x;
+        color: $color-text-l;
+      }
+    }
     /*}*/
   }
 

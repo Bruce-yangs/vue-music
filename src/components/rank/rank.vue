@@ -4,7 +4,7 @@
       <ul>
         <li class="item" v-for="item in topList" @click="selectItem(item)">
           <div class="icon">
-            <img  width='100' height='100' v-lazy="item.picUrl">
+            <img width='100' height='100' v-lazy="item.picUrl">
           </div>
           <ul class="songlist">
             <li class="song" v-for="(song,index) in item.songList">
@@ -31,14 +31,14 @@
   import {mapMutations} from 'vuex'
 
   export default {
-    mixins:[playlistMixin],
+    mixins: [playlistMixin],
     data(){
       return {
         topList: []
       }
     },
     created() {
-        this._getTopList()
+      this._getTopList()
     },
     methods: {
       /*解决当歌曲播放后 mini播放器 挡住 最下方的歌曲展示，重新 refresh计算*/
@@ -48,25 +48,25 @@
         this.$refs.toplist.refresh()
       },
       _getTopList(){
-          getTopList().then((res) => {
-            if(res.code === ERR_OK) {
-                this.topList = res.data.topList
-                console.log(res)
-            }
-          })
-        },
+        getTopList().then((res) => {
+          if (res.code === ERR_OK) {
+            this.topList = res.data.topList
+            console.log(res)
+          }
+        })
+      },
       selectItem(item) {
         this.$router.push({
-          path:`/rank/${item.id}`
+          path: `/rank/${item.id}`
         })
         this.setTopList(item)
       },
       ...mapMutations({
-        setTopList:'SET_TOP_LIST'
+        setTopList: 'SET_TOP_LIST'
       })
     },
     components: {
-      Scroll,Loading
+      Scroll, Loading
     }
   }
 </script>
@@ -75,11 +75,11 @@
   @import '~common/sass/variable.scss';
   @import '~common/sass/mixin.scss';
 
-  .rank{
+  .rank {
     position: fixed;
     width: 100%;
-    top:88px;
-    bottom:0;
+    top: 88px;
+    bottom: 0;
     .toplist {
       height: 100%;
       overflow: hidden;
@@ -91,7 +91,7 @@
         &:last-child {
           padding-bottom: 20px;
         }
-        .icon{
+        .icon {
           flex: 0 0 100px;
           width: 100px;
           height: 100px;

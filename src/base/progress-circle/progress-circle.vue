@@ -1,9 +1,10 @@
 <template>
-  <div class="progress-circle" ref="progressBar" ><!--viewBox="0 0 100 100"  的值 对应 r="50" 半径-->
+  <div class="progress-circle" ref="progressBar"><!--viewBox="0 0 100 100"  的值 对应 r="50" 半径-->
     <svg :width="radius" :height="radius" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <circle class="progress-background" r="50" cx="50" cy="50" fill="transparent"/>
-                                                                          <!--stroke-dasharray :指描边，描边距离r:50 2πR 求出周长   stroke-dashoffset:描边偏移 -->
-      <circle class="progress-bar" r="50" cx="50" cy="50" fill="transparent" :stroke-dasharray="dashArray" :stroke-dashoffset="dashOffset"/>
+      <!--stroke-dasharray :指描边，描边距离r:50 2πR 求出周长   stroke-dashoffset:描边偏移 -->
+      <circle class="progress-bar" r="50" cx="50" cy="50" fill="transparent" :stroke-dasharray="dashArray"
+              :stroke-dashoffset="dashOffset"/>
     </svg>
     <slot></slot>
   </div>
@@ -17,45 +18,46 @@
 
   export default {
     props: {
-        radius: {
-            type: Number,
-            default: 100
-        },
-        percent: {
-            type: Number,
-            default: 0
-        }
+      radius: {
+        type: Number,
+        default: 100
+      },
+      percent: {
+        type: Number,
+        default: 0
+      }
     },
     data() {
-        return {
-            dashArray: Math.PI*100
-        }
+      return {
+        dashArray: Math.PI * 100
+      }
     },
     computed: {
       dashOffset() {
-          /*console.log(this.dashArray)
-          console.log((1-this.percent) * this.dashArray)*/
-          return (1-this.percent) * this.dashArray
+        /*console.log(this.dashArray)
+         console.log((1-this.percent) * this.dashArray)*/
+        return (1 - this.percent) * this.dashArray
       }
     }
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
-  .progress-circle{
+
+  .progress-circle {
     position: relative;
-    circle{
+    circle {
       stroke-width: 8px;
       transform-origin: center;
-      &.progress-background{
-          transform:scale(.9);
-          stroke:$color-theme-d;
-       }
-      &.progress-bar{
-         transform:scale(.9) rotate(-90deg);
-         stroke:$color-theme;
-       }
+      &.progress-background {
+        transform: scale(.9);
+        stroke: $color-theme-d;
+      }
+      &.progress-bar {
+        transform: scale(.9) rotate(-90deg);
+        stroke: $color-theme;
+      }
     }
   }
 </style>

@@ -3,9 +3,9 @@
     <div class="bar-inner">
       <div class="progress" ref="progress"></div>
       <div class="progress-btn-wrapper" ref="progressBtn"
-            @touchstart.prevent="progressTouchStart"
-            @touchmove.prevent="progressTouchMove"
-            @touchend.prevent="progressTouchEnd"
+           @touchstart.prevent="progressTouchStart"
+           @touchmove.prevent="progressTouchMove"
+           @touchend.prevent="progressTouchEnd"
       >
         <div class="progress-btn"></div>
       </div>
@@ -21,14 +21,14 @@
 
   export default {
     props: {
-        percent: {
-            type: Number,
-            default: 0
-        }
+      percent: {
+        type: Number,
+        default: 0
+      }
     },
     created() {
-        //实例touch 之间的共享数据
-        this.touch = {}
+      //实例touch 之间的共享数据
+      this.touch = {}
     },
     methods: {
       // 进度条拖动效果
@@ -40,13 +40,13 @@
         this.touch.left = this.$refs.progress.clientWidth
       },
       progressTouchMove(e) {
-        if(!this.touch.initiated) return
+        if (!this.touch.initiated) return
 
         /*求出纵向偏移量  移动的值*/
         const deltaX = e.touches[0].pageX - this.touch.startX
 
         /*算出移动的范围*/
-        const offsetWidth = Math.min(Math.max(0,this.touch.left + deltaX),this.$refs.progressBar.clientWidth - progressBtnWidth)
+        const offsetWidth = Math.min(Math.max(0, this.touch.left + deltaX), this.$refs.progressBar.clientWidth - progressBtnWidth)
 
         /*实时移动按钮的位置*/
         this._offset(offsetWidth)
@@ -66,74 +66,75 @@
       _triggerPercent() {
         const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
         const percent = this.$refs.progress.clientWidth / barWidth
-        this.$emit('percentChange',percent)
+        this.$emit('percentChange', percent)
       },
       progressClick(e) {//点击哪就播放哪的音乐
         //e.offsetX 值是有问题的
         //this._offset(e.offsetX)
         const rect = this.$refs.progressBar.getBoundingClientRect()
         const offsetWidth = e.pageX - rect.left
-      /*  if(offsetWidth < 1 || offsetWidth > rect.width){
-            return
-        } else {
-          this._offset(offsetWidth)
-        }*/
+        /*  if(offsetWidth < 1 || offsetWidth > rect.width){
+         return
+         } else {
+         this._offset(offsetWidth)
+         }*/
         this._offset(offsetWidth)
 
         console.log(rect)
         /*console.log(e.pageX)
-        console.log(offsetWidth)*/
+         console.log(offsetWidth)*/
         this._triggerPercent()
       }
     },
     watch: {
       percent(newPercent) {
-          if(newPercent >= 0 && !this.touch.initiated) {
-            const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
+        if (newPercent >= 0 && !this.touch.initiated) {
+          const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
 
-            /*求出偏移值*/
-            const offsetWidth = newPercent * barWidth
+          /*求出偏移值*/
+          const offsetWidth = newPercent * barWidth
 
-            this._offset(offsetWidth)
+          this._offset(offsetWidth)
 
-          }
+        }
       }
     }
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
-  .progress-bar{
-    height:30px;
-    .bar-inner{
+
+  .progress-bar {
+    height: 30px;
+    .bar-inner {
       position: relative;
-      top:13px;
-      height:4px;
-      background: rgba(0,0,0,0.3);
-      .progress{
+      top: 13px;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      .progress {
         position: absolute;
         height: 100%;
         background: $color-theme;
 
       }
-      .progress-btn-wrapper{
+      .progress-btn-wrapper {
         position: absolute;
         left: -8px;
         top: -13px;
         width: 30px;
         height: 30px;
-          .progress-btn{
-             position: relative;
-             left:7px;
-             top:7px;
-             width: 16px;
-             height:16px;
-             box-sizing: border-box;
-             border:3px solid $color-text;
-             border-radius:50%;
-             background: $color-theme;
-         }
+        .progress-btn {
+          position: relative;
+          left: 7px;
+          top: 7px;
+          width: 16px;
+          height: 16px;
+          box-sizing: border-box;
+          border: 3px solid $color-text;
+          border-radius: 50%;
+          background: $color-theme;
+        }
       }
     }
   }

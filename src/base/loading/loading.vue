@@ -8,20 +8,21 @@
 <script>
   export default {
     props: {
-        title: {
-            type: String,
-            default:'正在加载...'
-        }
+      title: {
+        type: String,
+        default: '正在加载...'
+      }
     }
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
-  .loading{
+
+  .loading {
     width: 100%;
     text-align: center;
-    .desc{
+    .desc {
       line-height: 20px;
       font-size: $font-size-small;
       color: $color-text-l;

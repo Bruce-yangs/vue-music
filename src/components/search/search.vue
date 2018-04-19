@@ -43,19 +43,19 @@
   import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
   import Suggest from 'components/suggest/suggest'
-  import {playlistMixin,searchMixin} from 'common/js/mixin'
+  import {playlistMixin, searchMixin} from 'common/js/mixin'
   import {mapActions} from 'vuex'
   export default {
-    mixins: [playlistMixin,searchMixin],
+    mixins: [playlistMixin, searchMixin],
     data(){
-      return{
-        hotKey:[],
-        query:'',
-        refreshDelay:100
+      return {
+        hotKey: [],
+        query: '',
+        refreshDelay: 100
       }
     },
     components: {
-      SearchBox,Suggest,SearchList,Confirm,Scroll
+      SearchBox, Suggest, SearchList, Confirm, Scroll
     },
     created() {
       this._getHotKey()
@@ -73,35 +73,35 @@
       },
       _getHotKey() {
         getHotKey().then((res) => {
-            this.hotKey = res.data.hotkey.slice(0,10)//截取热搜的 前10条数据
+          this.hotKey = res.data.hotkey.slice(0, 10)//截取热搜的 前10条数据
           console.log(res.data.hotkey)
         })
       },
       showConfirm() {/*调用confirm*/
-          this.$refs.confirm.show()
+        this.$refs.confirm.show()
       },
-     //此处如果只是简单的执行删除功能  可以直接 把mapActions定义的事件 赋值到对应的绑定事件上 从而减少代码量
-     /* deleteOne(item){
-        this.deleteSearchHistory(item)
-      },
-      deleteAll(){
-        this.clearSearchHistory()
-      },*/
+      //此处如果只是简单的执行删除功能  可以直接 把mapActions定义的事件 赋值到对应的绑定事件上 从而减少代码量
+      /* deleteOne(item){
+       this.deleteSearchHistory(item)
+       },
+       deleteAll(){
+       this.clearSearchHistory()
+       },*/
       ...mapActions([
         'clearSearchHistory'
       ])
     },
-    computed:{
+    computed: {
       shortcut() {/*监听两者 任一 一个有变化就重新计算 scroll*/
-          return this.hotKey.concat(this.searchHistory)
+        return this.hotKey.concat(this.searchHistory)
       }
     },
     watch: {
       query(newQuery) {
-        if(!newQuery) {
+        if (!newQuery) {
           setTimeout(() => {
-              this.$refs.shortcut.refresh()
-          },20)
+            this.$refs.shortcut.refresh()
+          }, 20)
         }
       }
     }
@@ -111,26 +111,27 @@
 <style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import '~common/sass/variable.scss';
   @import '~common/sass/mixin.scss';
-  .search{
-    .search-box-wrapper{
-      margin:20px;
+
+  .search {
+    .search-box-wrapper {
+      margin: 20px;
     }
-    .shortcut-wrapper{
-      position:fixed;
-      top:178px;
-      bottom:0;
-      width:100%;
-      .shortcut{
+    .shortcut-wrapper {
+      position: fixed;
+      top: 178px;
+      bottom: 0;
+      width: 100%;
+      .shortcut {
         height: 100%;
         overflow: hidden;
-        .hot-key{
+        .hot-key {
           margin: 0 20px 20px 20px;
-          .title{
+          .title {
             margin-bottom: 20px;
             font-size: $font-size-medium;
             color: $color-text-l;
           }
-          .item{
+          .item {
             display: inline-block;
             padding: 5px 10px;
             margin: 0 20px 10px 0;
@@ -140,21 +141,21 @@
             color: $color-text-d;
           }
         }
-        .search-history{
+        .search-history {
           position: relative;
           margin: 0 20px;
-          .title{
+          .title {
             display: flex;
             align-items: center;
             height: 40px;
             font-size: $font-size-medium;
             color: $color-text-l;
-            .text{
+            .text {
               flex: 1;
             }
-            .clear{
+            .clear {
               @include extend-click;
-              .icon-clear{
+              .icon-clear {
                 font-size: $font-size-medium;
                 color: $color-text-d;
               }
@@ -164,7 +165,7 @@
 
       }
     }
-    .search-result{
+    .search-result {
       position: fixed;
       width: 100%;
       top: 178px;

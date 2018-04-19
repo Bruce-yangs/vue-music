@@ -1,5 +1,6 @@
 <template>
-  <scroll class="listview" :data="data" ref="listview" :listenScroll="listenScroll" :probeType="probeType" @scroll="scroll">
+  <scroll class="listview" :data="data" ref="listview" :listenScroll="listenScroll" :probeType="probeType"
+          @scroll="scroll">
     <ul>
       <li v-for="group in data" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
@@ -13,7 +14,7 @@
     </ul>
     <div class="list-shortcut" @touchstart="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove">
       <ul>
-        <li v-for="(item, index) in shortcutList" class="item"  :data-index="index"
+        <li v-for="(item, index) in shortcutList" class="item" :data-index="index"
             :key="item.key"
             :class="{'current' : currentIndex === index}">
           {{item}}
@@ -57,10 +58,10 @@
     },
     computed: {
       shortcutList() {
-          return this.data.map((group) => {
-              //截取热门 ->热
-              return group.title.substr(0, 1)
-          })
+        return this.data.map((group) => {
+          //截取热门 ->热
+          return group.title.substr(0, 1)
+        })
       },
       fixedTitle() {
         if (this.scrollY > 0) return
@@ -109,10 +110,10 @@
       },
       // 计算每一个singer list的height
       calcHeight() {
-       this.listHeight = []
-       const list = this.$refs.listGroup
-       let height = 0
-       this.listHeight.push(height)//此处先存放第一个元素的高度 为0
+        this.listHeight = []
+        const list = this.$refs.listGroup
+        let height = 0
+        this.listHeight.push(height)//此处先存放第一个元素的高度 为0
         for (let i = 0; i < list.length; i++) {
           let item = list[i]
           height += item.clientHeight
@@ -123,7 +124,7 @@
         this.$emit('select', item)
       }
     },
-    components:{
+    components: {
       Scroll,
       Loading
     },
@@ -174,69 +175,69 @@
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
 
   .listview {
     position: relative;
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     background: $color-background;
     .list-group {
-      padding-bottom:30px;
+      padding-bottom: 30px;
       .list-group-title {
         height: 30px;
         line-height: 30px;
         padding-left: 20px;
         font-size: $font-size-small;
-        color:$color-text-l;
+        color: $color-text-l;
         background: $color-highlight-background;
       }
-      .list-group-item{
+      .list-group-item {
         display: flex;
         align-items: center;
-        padding:20px 0 0 30px;
+        padding: 20px 0 0 30px;
         .avatar {
-          width:50px;
-          height:50px;
-          border-radius:50%;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
         }
-        .name{
-          margin-left:20px;
-          color:$color-text-l;
+        .name {
+          margin-left: 20px;
+          color: $color-text-l;
           font-size: $font-size-medium;
         }
       }
     }
-    .list-shortcut{
+    .list-shortcut {
       position: absolute;
       z-index: 30;
-      right:0;
-      top:50%;
+      right: 0;
+      top: 50%;
       transform: translateY(-50%);
-      width:20px;
-      padding:20px 0;
-      border-radius:10px;
+      width: 20px;
+      padding: 20px 0;
+      border-radius: 10px;
       text-align: center;
       background: $color-background-d;
-      font-family:Helvetica;
-      .item{
+      font-family: Helvetica;
+      .item {
         padding: 3px;
         line-height: 1;
         color: $color-text-l;
         font-size: $font-size-small;
-        &.current{
-           color: $color-theme;
-         }
+        &.current {
+          color: $color-theme;
+        }
       }
     }
-    .list-fixed{
+    .list-fixed {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      .fixed-title{
+      .fixed-title {
         height: 30px;
         line-height: 30px;
         padding-left: 20px;
@@ -245,7 +246,7 @@
         background: $color-highlight-background;
       }
     }
-    .loading-container{
+    .loading-container {
       position: absolute;
       width: 100%;
       top: 50%;

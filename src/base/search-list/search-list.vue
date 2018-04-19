@@ -22,43 +22,44 @@
       }
     },
     created() {
-        //把v-model query 文本框参数暴露出去   debounce封装的节流方法  快速输入的时候不会发送请求
-        this.$watch('query',debounce((newQuery) => {
-            this.$emit('query',newQuery)
-        },200))
+      //把v-model query 文本框参数暴露出去   debounce封装的节流方法  快速输入的时候不会发送请求
+      this.$watch('query', debounce((newQuery) => {
+        this.$emit('query', newQuery)
+      }, 200))
     },
     methods: {
       selectItem(item) {
-          this.$emit('select',item)
+        this.$emit('select', item)
       },
       deleteOne(item) {
-          this.$emit('delete',item)
+        this.$emit('delete', item)
       }
     }
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
   @import "~common/sass/mixin.scss";
-  .search-list{
-    .search-item{
+
+  .search-list {
+    .search-item {
       display: flex;
       align-items: center;
       height: 40px;
-      &.list-enter-active,&.list-leave-active{
-        transition:all .1s;
+      &.list-enter-active, &.list-leave-active {
+        transition: all .1s;
       }
-      &.list-enter,&.list-leave-to{
+      &.list-enter, &.list-leave-to {
         height: 0;
       }
-      .text{
+      .text {
         flex: 1;
         color: $color-text-l;
       }
-      .icon{
+      .icon {
         @include extend-click;
-        .icon-delete{
+        .icon-delete {
           font-size: $font-size-small;
           color: $color-text-d;
         }

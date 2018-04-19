@@ -19,90 +19,90 @@
   import Loading from 'base/loading/loading'
   import {getData} from 'common/js/dom'
 
-    export default {
-      props: {
-          songs: {
-              type: Array,
-              default: []
-          },
-          rank: {
-            type: Boolean,
-            default: false
-          }
+  export default {
+    props: {
+      songs: {
+        type: Array,
+        default: []
       },
-      methods: {
-          getDesc(song) {
-              return `${song.singer} . ${song.album}`
-          },
-          selectItem(item,index){
-              //派发事件，告诉父组件子组件当前被点了
-              this.$emit('select',item,index);
+      rank: {
+        type: Boolean,
+        default: false
+      }
+    },
+    methods: {
+      getDesc(song) {
+        return `${song.singer} . ${song.album}`
+      },
+      selectItem(item, index){
+        //派发事件，告诉父组件子组件当前被点了
+        this.$emit('select', item, index);
 
-          },
-          getRankCls(index) {
-            if(index<=2) {
-                return `icon icon${index}`
-            }else{
-                return 'text'
-            }
-          },
-          getRankText(index){
-            if(index>2) {
-              return index + 1
-            }
-          }
+      },
+      getRankCls(index) {
+        if (index <= 2) {
+          return `icon icon${index}`
+        } else {
+          return 'text'
+        }
+      },
+      getRankText(index){
+        if (index > 2) {
+          return index + 1
+        }
       }
     }
+  }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
   @import "~common/sass/mixin.scss";
 
   .song-list {
-    .item{
+    .item {
       display: flex;
       align-items: center;
       box-sizing: border-box;
       height: 64px;
       font-size: $font-size-medium;
-      .rank{
+      .rank {
         flex: 0 0 25px;
-        width:25px;
+        width: 25px;
         margin-right: 30px;
         text-align: center;
-        .icon{
+        .icon {
           display: inline-block;
           width: 25px;
           height: 24px;
-          background-size:25px 24px;
-          &.icon0{
+          background-size: 25px 24px;
+          &.icon0 {
             @include bg-image('first');
           }
-          &.icon1{
+          &.icon1 {
             @include bg-image('second');
           }
-          &.icon2{
+          &.icon2 {
             @include bg-image('third');
           }
         }
-        .text{
+        .text {
           color: $color-theme;
           font-size: $font-size-large;
         }
       }
-      .content{
-        flex:1;
+      .content {
+        flex: 1;
         line-height: 20px;
         overflow: hidden;
-        .name{
-           @include no-wrap;
-           color: $color-text;
+        .name {
+          @include no-wrap;
+          color: $color-text;
         }
-        .desc{
-           @include no-wrap;
-           margin-top: 4px;
-           color: $color-text-d;
+        .desc {
+          @include no-wrap;
+          margin-top: 4px;
+          color: $color-text-d;
         }
       }
     }

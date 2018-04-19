@@ -9,23 +9,23 @@
 <script>
   export default {
     data(){
-        return{
-          showFlag: false
-        }
+      return {
+        showFlag: false
+      }
     },
     props: {
-        delay:{
-          type:Number,
-          default:1500
-        }
+      delay: {
+        type: Number,
+        default: 1500
+      }
     },
     methods: {
       show() {
-          this.showFlag = true
-          clearTimeout(this.timer)
-          this.timer = setTimeout(() => {
-              this.hide()
-          },this.delay)
+        this.showFlag = true
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.hide()
+        }, this.delay)
       },
       hide() {
         this.showFlag = false
@@ -34,20 +34,20 @@
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
 
   .top-tip {
     position: fixed;
-    top:0;
+    top: 0;
     width: 100%;
     z-index: 500;
     background: $color-dialog-background;
-    &.drop-eanter-active,&.drop-leave-active{
+    &.drop-eanter-active, &.drop-leave-active {
       transition: all .3s;
     }
-    &.drop-enter,&.drop-leave-to{
-      transform:translate3d(0,-100%,0)
+    &.drop-enter, &.drop-leave-to {
+      transform: translate3d(0, -100%, 0)
     }
   }
 </style>

@@ -2,28 +2,28 @@
   <div class="recommend" ref="recommend">
     <scroll class="recommend-content" :data="discList" ref="scroll">
       <div>
-          <div class="slider-wrapper" v-if="recommends.length">
-            <slider>
-              <div  v-for="item in recommends">
-                <a :href="item.linkUrl">
-                  <img class="needsclick" :src="item.picUrl" @load="loadImage">
-                </a>
+        <div class="slider-wrapper" v-if="recommends.length">
+          <slider>
+            <div v-for="item in recommends">
+              <a :href="item.linkUrl">
+                <img class="needsclick" :src="item.picUrl" @load="loadImage">
+              </a>
+            </div>
+          </slider>
+        </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li @click="selectItem(item)" v-for="item in discList" class="item">
+              <div class="icon">
+                <img v-lazy="item.imgurl" width="60" height="60">
               </div>
-            </slider>
-          </div>
-          <div class="recommend-list">
-            <h1 class="list-title">热门歌单推荐</h1>
-            <ul>
-              <li @click="selectItem(item)" v-for="item in discList" class="item">
-                <div class="icon">
-                  <img v-lazy="item.imgurl" width="60" height="60">
-                </div>
-                <div class="text">
-                  <h2 class="item" v-html="item.creator.name"></h2>
-                  <p class="desc" v-html="item.dissname"></p>
-                </div>
-              </li>
-            </ul>
+              <div class="text">
+                <h2 class="item" v-html="item.creator.name"></h2>
+                <p class="desc" v-html="item.dissname"></p>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
       <div class="loading-container" v-show="!discList.length">
@@ -38,7 +38,7 @@
   import Slider from 'base/slider/slider'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
-  import {getRecommend,getDiscList} from 'api/recommend'
+  import {getRecommend, getDiscList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   import {playlistMixin} from 'common/js/mixin'
   import {mapMutations} from 'vuex'
@@ -48,7 +48,7 @@
     data(){
       return {
         recommends: [],
-        discList:[]
+        discList: []
       }
     },
     created(){
@@ -61,7 +61,8 @@
         this.$router.push({
           path: `/recommend/${item.dissid}`
         })
-        this.setDisc(item)/*传入state*/
+        this.setDisc(item)
+        /*传入state*/
       },
       /*解决当歌曲播放后 mini播放器 挡住 最下方的歌曲展示，重新 refresh计算*/
       handlePlaylist(playlist) {
@@ -84,17 +85,17 @@
         })
       },
       loadImage() {
-          if(!this.checkLoaded) {
-            this.$refs.scroll.refresh();
-            this.checkLoaded = true;
-          }
+        if (!this.checkLoaded) {
+          this.$refs.scroll.refresh();
+          this.checkLoaded = true;
+        }
       },
       ...mapMutations({
-        setDisc:'SET_DISC'
+        setDisc: 'SET_DISC'
       })
     },
     components: {
-      Slider,Scroll,Loading
+      Slider, Scroll, Loading
     }
   }
 </script>

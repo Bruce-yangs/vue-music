@@ -14,46 +14,46 @@
   export default {
     data(){
       return {
-        songs:[]
+        songs: []
       }
     },
     computed: {
       title() {
-        return  this.disc.dissname
+        return this.disc.dissname
       },
       bgImage() {
-        return  this.disc.imgurl
+        return this.disc.imgurl
       },
       /*通过vuex获取父组件歌单 传递的值*/
       ...mapGetters([
-          'disc'
+        'disc'
       ])
     },
     created() {
-        this._getSongList()
+      this._getSongList()
     },
     methods: {
-        _getSongList() {
-          if(!this.disc.dissid) {
-              this.$router.push('/recommend')
-              return
-          }
-          getSongList(this.disc.dissid).then((res) => {
-              if(res.code === ERR_OK) {
-//                console.log(res.cdlist[0].songlist)
-               this.songs = this._normalizeSongs(res.cdlist[0].songlist)
-              }
-          })
-        },
-        _normalizeSongs(list) {
-            let ret = []
-            list.forEach((musicData) => {
-                if(musicData.songid && musicData.albumid) {
-                  ret.push(createSong(musicData))
-                }
-            })
-            return ret
+      _getSongList() {
+        if (!this.disc.dissid) {
+          this.$router.push('/recommend')
+          return
         }
+        getSongList(this.disc.dissid).then((res) => {
+          if (res.code === ERR_OK) {
+//                console.log(res.cdlist[0].songlist)
+            this.songs = this._normalizeSongs(res.cdlist[0].songlist)
+          }
+        })
+      },
+      _normalizeSongs(list) {
+        let ret = []
+        list.forEach((musicData) => {
+          if (musicData.songid && musicData.albumid) {
+            ret.push(createSong(musicData))
+          }
+        })
+        return ret
+      }
     },
     components: {
       MusicList
@@ -61,13 +61,15 @@
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import '~common/sass/variable.scss';
   @import '~common/sass/mixin.scss';
-  .slide-enter-active,.slide-leave-active {
+
+  .slide-enter-active, .slide-leave-active {
     transition: all 0.3s;
   }
-  .slide-enter,.slide-leave-to {
+
+  .slide-enter, .slide-leave-to {
     transform: translate3d(100%, 0, 0)
   }
 </style>
