@@ -163,7 +163,7 @@
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
   @import "~common/sass/mixin.scss";
   .suggest{

@@ -64,7 +64,7 @@
 
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" type="text/scss">
   @import "~common/sass/variable.scss";
   .slide-enter-active,.slide-leave-active{
     transition: all 0.3s;
