@@ -50,9 +50,9 @@
         })
       },
       _normalizeSongs(list) {
-        let ret = []
+        let ret = [];
         list.forEach((item) => {
-          const musicData = item.data
+          const musicData = item.data;
           if (musicData.songid && musicData.albumid) {
             ret.push(createSong(musicData))
           }
